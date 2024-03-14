@@ -24,4 +24,15 @@ function authenticate(req: Request, res: Response) {
   res.send(username);
 }
 
-export { authenticate };
+function deauthenticate(req: Request, res: Response) {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      res.sendStatus(200);
+    }
+  });
+}
+
+export { authenticate, deauthenticate };

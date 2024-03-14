@@ -21,6 +21,7 @@ app.use(
     cookie: { maxAge: 604800000 },
   })
 );
+
 app.use(express.json());
 app.use(health_check);
 app.use("/users", user_routes);
