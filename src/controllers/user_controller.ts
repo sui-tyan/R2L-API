@@ -1,4 +1,5 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
+import bcrypt from 'bcrypt';
 
 interface UserCredential {
   username: string;
@@ -9,7 +10,7 @@ interface UserSession {
   id: string;
 }
 
-declare module "express-session" {
+declare module 'express-session' {
   interface SessionData {
     user: UserSession;
   }
@@ -24,6 +25,20 @@ function authenticate(req: Request, res: Response) {
   res.send(username);
 }
 
+async function register(req: Request, res: Response) {
+  const { username, password }: UserCredential = req.body;
+  // bcrypt.genSalt(10, (err, salt) => {
+  //   bcrypt.hash(password, salt, (err, hash) => {
+  //     console.log(hash);
+  //   });
+  // });
+
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  // TODO: Save hash and username to DB
+}
+
 function deauthenticate(req: Request, res: Response) {
   req.session.destroy((err) => {
     if (err) {
@@ -35,4 +50,4 @@ function deauthenticate(req: Request, res: Response) {
   });
 }
 
-export { authenticate, deauthenticate };
+export { authenticate, deauthenticate, register };
